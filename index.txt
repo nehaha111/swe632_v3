@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Engine Prototype</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container">
+        <h1>Task Engine</h1>
+
+        <!-- Help and Documentation Button -->
+        <button id="helpButton">Help & Documentation</button>
+
+        <!-- Help Popup -->
+        <div id="helpPopup" class="help-popup">
+            <p id="helpMessage">This is a task management application where you can create, edit, and delete tasks, set deadlines, assign them to team members, and filter tasks by priority.</p>
+            <button id="closePopup">Close</button>
+        </div>
+
+        <!-- Task Form -->
+        <div class="task-form">
+            <form id="taskForm">
+                <div class="form-left">
+                    <label for="title">Name of Task:</label>
+                    <input type="text" id="title" required>
+
+                    <label for="description">Description of Task:</label>
+                    <textarea id="description" required></textarea>
+                    <p id="wordCount">0/30 words</p>
+
+                    <label for="deadline">Deadline:</label>
+                    <input type="date" id="deadline" required>
+                </div>
+
+                <div class="form-right">
+                    <label for="team">Team:</label>
+                    <select id="team" required>
+                        <option value="Development Team">Development Team</option>
+                        <option value="Design Team">Design Team</option>
+                        <option value="Quality Assurance Team">Quality Assurance Team</option>
+                        <option value="Business Analyst Team">Business Analyst Team</option>
+                        <option value="Marketing Team">Marketing Team</option>
+                        <option value="Support Team">Support Team</option>
+                        <option value="Documentation Team">Documentation Team</option>
+                    </select>
+
+                    <label for="priority">Priority:</label>
+                    <select id="priority" required title="Choose the urgency level for this task">
+                        <option value="Low" class="low-priority" title="Low urgency">Low</option>
+                        <option value="Medium" class="medium-priority" title="Medium urgency">Medium</option>
+                        <option value="High" class="high-priority" title="High urgency">High</option>
+                    </select>
+
+                    <label for="assignee">Assignee:</label>
+                    <select id="assignee" required>
+                        <option value="Member1">Member1</option>
+                        <option value="Member2">Member2</option>
+                        <option value="Member3">Member3</option>
+                        <option value="Member4">Member4</option>
+                    </select>
+
+                    <button type="submit">Add Task</button>
+                    <button type="button" id="resetButton">Reset</button> 
+                </div>
+            </form>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter">
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search tasks">
+                <i class="fas fa-search"></i>
+            </div>
+            <select id="filter">
+                <option value="">All</option>
+                <option value="Low">Low Priority</option>
+                <option value="Medium">Medium Priority</option>
+                <option value="High">High Priority</option>
+            </select>
+            <p id="noResults" style="display: none;">No task matches your search.</p>
+        </div>
+
+        <!-- Task Table -->
+        <table id="taskTable">
+            <thead>
+                <tr>
+                    <th>Name of task</th>
+                    <th>Team</th>
+                    <th>Description</th>
+                    <th>Priority</th>
+                    <th>Deadline</th>
+                    <th>Assignee</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="javascript.js"></script>
+</body>
+</html>
+
