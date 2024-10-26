@@ -10,13 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const resetButton = document.getElementById('resetButton');
     const helpButton = document.getElementById('helpButton');
     const helpPopup = document.getElementById('helpPopup');
-    const slides = document.querySelectorAll('.slide');
-    const nextSlideButtons = document.querySelectorAll('.next-slide');
+    const nextSlide = document.getElementById('nextSlide');
     const closePopupButton = document.getElementById('closePopup');
 
     let tasks = [];
     let editIndex = null;
-    let currentSlideIndex = 0;
 
     function addTaskRow(task, index) {
         const row = taskTable.insertRow();
@@ -41,120 +39,115 @@ document.addEventListener('DOMContentLoaded', function() {
             </td>
         `;
 
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-            if (confirm('Are you sure you want to delete this task?')) {
-                tasks.splice(index, 1);
-                displayTasks();
-                showMessage('Task deleted successfully!');
-            }
-        });
-
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            editTask(index);
+            editIndex = index;
+            fillForm(task);
         });
 
-        const priorityCell = row.cells[3];
-        if (task.priority === 'High') {
-            priorityCell.style.color = 'red';
-        } else if (task.priority === 'Medium') {
-            priorityCell.style.color = 'orange';
-        } else if (task.priority === 'Low') {
-            priorityCell.style.color = 'green';
-        }
-    }
-
-    function displayTasks() {
-        taskTable.innerHTML = '';
-        tasks.forEach((task, index) => {
-            addTaskRow(task, index);
+        row.querySelector('.delete-btn').addEventListener('click', () => {
+            tasks.splice(index, 1);
+            renderTasks();
         });
-        noResultsMessage.style.display = tasks.length === 0 ? 'block' : 'none';
     }
 
-    function editTask(index) {
-        const task = tasks[index];
+    function fillForm(task) {
         document.getElementById('title').value = task.title;
-        document.getElementById('description').value = task.description;
-        document.getElementById('deadline').value = task.deadline;
+        descriptionInput.value = task.description;
+        deadlineInput.value = task.deadline;
         document.getElementById('team').value = task.team;
         document.getElementById('priority').value = task.priority;
         document.getElementById('assignee').value = task.assignee;
-
-        editIndex = index;
+        wordCountDisplay.textContent = `${task.description.length}/30 words`;
     }
 
-    function showMessage(message) {
-        alert(message);
+    function clearForm() {
+        taskForm.reset();
+        wordCountDisplay.textContent = '0/30 words';
+        editIndex = null;
+    }
+
+    function renderTasks() {
+        taskTable.innerHTML = '';
+        tasks.forEach((task, index) => addTaskRow(task, index));
+        if (tasks.length === 0) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
     }
 
     taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const title = document.getElementById('title').value;
-        const description = document.getElementById('description').value;
-        const deadline = document.getElementById('deadline').value;
+        const title = document.getElementById('title').value.trim();
+        const description = descriptionInput.value.trim();
+        const deadline = deadlineInput.value;
         const team = document.getElementById('team').value;
         const priority = document.getElementById('priority').value;
         const assignee = document.getElementById('assignee').value;
 
-        if (editIndex !== null) {
-            tasks[editIndex] = { title, description, deadline, team, priority, assignee };
-            editIndex = null;
-            showMessage('Task updated successfully!');
-        } else {
-            tasks.push({ title, description, deadline, team, priority, assignee });
-            showMessage('Task added successfully!');
+        if (title === '' || description === '' || deadline === '') {
+            alert('Please fill out all required fields.');
+            return;
         }
 
-        displayTasks();
-        taskForm.reset();
+        const task = { title, description, deadline, team, priority, assignee };
+
+        if (editIndex !== null) {
+            tasks[editIndex] = task;
+        } else {
+            tasks.push(task);
+        }
+
+        renderTasks();
+        clearForm();
     });
 
     searchInput.addEventListener('input', function() {
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchTerm));
-        noResultsMessage.style.display = filteredTasks.length === 0 ? 'block' : 'none';
+        const searchText = searchInput.value.toLowerCase();
+        const filteredTasks = tasks.filter(task =>
+            task.title.toLowerCase().includes(searchText) ||
+            task.description.toLowerCase().includes(searchText)
+        );
+
+        if (filteredTasks.length === 0) {
+            noResultsMessage.style.display = 'block';
+        } else {
+            noResultsMessage.style.display = 'none';
+        }
+
         taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => {
-            addTaskRow(task, index);
-        });
+        filteredTasks.forEach((task, index) => addTaskRow(task, index));
     });
 
     filterSelect.addEventListener('change', function() {
-        const selectedPriority = filterSelect.value;
-        const filteredTasks = tasks.filter(task => task.priority === selectedPriority || selectedPriority === '');
-        noResultsMessage.style.display = filteredTasks.length === 0 ? 'block' : 'none';
+        const filterValue = filterSelect.value;
+        const filteredTasks = tasks.filter(task => 
+            filterValue === '' || task.priority === filterValue
+        );
+
         taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => {
-            addTaskRow(task, index);
-        });
+        filteredTasks.forEach((task, index) => addTaskRow(task, index));
+    });
+
+    resetButton.addEventListener('click', clearForm);
+
+    helpButton.addEventListener('click', () => {
+        helpPopup.style.display = 'flex';
+    });
+
+    nextSlide.addEventListener('click', () => {
+        document.getElementById('slide1').style.display = 'none';
+        document.getElementById('slide2').style.display = 'block';
+    });
+
+    closePopupButton.addEventListener('click', () => {
+        helpPopup.style.display = 'none';
+        document.getElementById('slide1').style.display = 'block';
+        document.getElementById('slide2').style.display = 'none';
     });
 
     descriptionInput.addEventListener('input', function() {
-        const wordCount = descriptionInput.value.trim().split(/\s+/).length;
+        const wordCount = descriptionInput.value.length;
         wordCountDisplay.textContent = `${wordCount}/30 words`;
-    });
-
-    resetButton.addEventListener('click', function() {
-        taskForm.reset();
-        wordCountDisplay.textContent = '0/30 words';
-    });
-
-    helpButton.addEventListener('click', function() {
-        helpPopup.style.display = 'block';
-        slides[currentSlideIndex].classList.add('active-slide');
-    });
-
-    nextSlideButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            slides[currentSlideIndex].classList.remove('active-slide');
-            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-            slides[currentSlideIndex].classList.add('active-slide');
-        });
-    });
-
-    closePopupButton.addEventListener('click', function() {
-        helpPopup.style.display = 'none';
-        slides.forEach(slide => slide.classList.remove('active-slide'));
-        currentSlideIndex = 0;
     });
 });
