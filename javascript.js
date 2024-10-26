@@ -8,9 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const deadlineInput = document.getElementById('deadline');
     const noResultsMessage = document.getElementById('noResults');
     const resetButton = document.getElementById('resetButton');
+    const helpButton = document.getElementById('helpButton');
+    const helpPopup = document.getElementById('helpPopup');
+    const slides = document.querySelectorAll('.slide');
+    const nextSlideButtons = document.querySelectorAll('.next-slide');
+    const closePopupButton = document.getElementById('closePopup');
 
     let tasks = [];
     let editIndex = null;
+    let currentSlideIndex = 0;
 
     function addTaskRow(task, index) {
         const row = taskTable.insertRow();
@@ -73,98 +79,82 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('team').value = task.team;
         document.getElementById('priority').value = task.priority;
         document.getElementById('assignee').value = task.assignee;
+
         editIndex = index;
     }
 
-    function handleFormSubmit(event) {
+    function showMessage(message) {
+        alert(message);
+    }
+
+    taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const newTask = {
-            title: document.getElementById('title').value,
-            description: document.getElementById('description').value,
-            deadline: document.getElementById('deadline').value,
-            team: document.getElementById('team').value,
-            priority: document.getElementById('priority').value,
-            assignee: document.getElementById('assignee').value
-        };
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const deadline = document.getElementById('deadline').value;
+        const team = document.getElementById('team').value;
+        const priority = document.getElementById('priority').value;
+        const assignee = document.getElementById('assignee').value;
 
         if (editIndex !== null) {
-            tasks[editIndex] = newTask;
+            tasks[editIndex] = { title, description, deadline, team, priority, assignee };
             editIndex = null;
-            showMessage('Task updated successfully!', 'success');
+            showMessage('Task updated successfully!');
         } else {
-            tasks.push(newTask);
-            showMessage('Task added successfully!', 'success');
+            tasks.push({ title, description, deadline, team, priority, assignee });
+            showMessage('Task added successfully!');
         }
 
         displayTasks();
         taskForm.reset();
-    }
-
-    taskForm.addEventListener('submit', handleFormSubmit);
-
-    resetButton.addEventListener('click', () => {
-        taskForm.reset();
-        editIndex = null;
     });
 
-    descriptionInput.addEventListener('input', () => {
-        const wordCount = descriptionInput.value.split(/\s+/).filter(word => word).length;
+    searchInput.addEventListener('input', function() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredTasks = tasks.filter(task => task.title.toLowerCase().includes(searchTerm));
+        noResultsMessage.style.display = filteredTasks.length === 0 ? 'block' : 'none';
+        taskTable.innerHTML = '';
+        filteredTasks.forEach((task, index) => {
+            addTaskRow(task, index);
+        });
+    });
+
+    filterSelect.addEventListener('change', function() {
+        const selectedPriority = filterSelect.value;
+        const filteredTasks = tasks.filter(task => task.priority === selectedPriority || selectedPriority === '');
+        noResultsMessage.style.display = filteredTasks.length === 0 ? 'block' : 'none';
+        taskTable.innerHTML = '';
+        filteredTasks.forEach((task, index) => {
+            addTaskRow(task, index);
+        });
+    });
+
+    descriptionInput.addEventListener('input', function() {
+        const wordCount = descriptionInput.value.trim().split(/\s+/).length;
         wordCountDisplay.textContent = `${wordCount}/30 words`;
     });
 
-    // Search functionality
-    searchInput.addEventListener('input', () => {
-        const searchTerm = searchInput.value.toLowerCase();
-        const filteredTasks = tasks.filter(task => 
-            task.title.toLowerCase().includes(searchTerm) ||
-            task.description.toLowerCase().includes(searchTerm) ||
-            task.priority.toLowerCase().includes(searchTerm)
-        );
-
-        taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => {
-            addTaskRow(task, index);
-        });
-
-        noResultsMessage.style.display = filteredTasks.length === 0 ? 'block' : 'none';
+    resetButton.addEventListener('click', function() {
+        taskForm.reset();
+        wordCountDisplay.textContent = '0/30 words';
     });
 
-    // Filtering by priority
-    filterSelect.addEventListener('change', () => {
-        const selectedPriority = filterSelect.value;
-        const filteredTasks = selectedPriority 
-            ? tasks.filter(task => task.priority === selectedPriority)
-            : tasks;
-
-        taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => {
-            addTaskRow(task, index);
-        });
-    });
-
-    // Help & Documentation Popup Logic
-    const helpButton = document.getElementById('helpButton');
-    const helpPopup = document.getElementById('helpPopup');
-    const closePopupButton = document.getElementById('closePopup');
-
-    helpButton.addEventListener('click', () => {
+    helpButton.addEventListener('click', function() {
         helpPopup.style.display = 'block';
+        slides[currentSlideIndex].classList.add('active-slide');
     });
 
-    closePopupButton.addEventListener('click', () => {
+    nextSlideButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            slides[currentSlideIndex].classList.remove('active-slide');
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            slides[currentSlideIndex].classList.add('active-slide');
+        });
+    });
+
+    closePopupButton.addEventListener('click', function() {
         helpPopup.style.display = 'none';
+        slides.forEach(slide => slide.classList.remove('active-slide'));
+        currentSlideIndex = 0;
     });
-
-    // Function to show messages to the user
-    function showMessage(message, type = 'info') {
-        const messageElement = document.createElement('div');
-        messageElement.className = `message ${type}`;
-        messageElement.textContent = message;
-        document.body.appendChild(messageElement);
-
-        setTimeout(() => {
-            document.body.removeChild(messageElement);
-        }, 3000);
-    }
 });
-
