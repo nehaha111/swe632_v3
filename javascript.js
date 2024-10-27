@@ -8,9 +8,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const deadlineInput = document.getElementById('deadline');
     const noResultsMessage = document.getElementById('noResults');
     const resetButton = document.getElementById('resetButton');
+    const originalSelect = document.getElementById('priority');
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
+
+    // Custom dropdown setup
+    const customDropdown = document.getElementById('customDropdown');
+    const dropdownSelected = document.getElementById('selectedPriority');
+    const dropdownOptions = customDropdown.querySelector('.dropdown-options');
+
+    // Toggle dropdown visibility
+    dropdownSelected.addEventListener('click', function() {
+        dropdownOptions.style.display = dropdownOptions.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Handle option selection
+    dropdownOptions.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', function() {
+            const selectedValue = option.getAttribute('data-value');
+            dropdownSelected.textContent = option.textContent;
+            dropdownSelected.style.color = option.style.color; // Apply selected color
+
+            // Update the original hidden select
+            originalSelect.value = selectedValue;
+
+            // Hide the dropdown
+            dropdownOptions.style.display = 'none';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!customDropdown.contains(e.target)) {
+            dropdownOptions.style.display = 'none';
+        }
+    });
 
     // Function to add a row to the task table
     function addTaskRow(task, index) {
@@ -19,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <td>${task.title}</td>
             <td>${task.team}</td>
             <td>${task.description}</td>
-            <td>${task.priority}</td>
+            <td style="color: ${getPriorityColor(task.priority)}">${task.priority}</td>
             <td>${task.deadline}</td>
             <td>${task.assignee}</td>
             <td>
@@ -49,16 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
         row.querySelector('.edit-btn').addEventListener('click', () => {
             editTask(index);
         });
-
-        // Apply priority color to the priority cell
-        const priorityCell = row.cells[3];
-        if (task.priority === 'High') {
-            priorityCell.style.color = 'red';
-        } else if (task.priority === 'Medium') {
-            priorityCell.style.color = 'orange';
-        } else if (task.priority === 'Low') {
-            priorityCell.style.color = 'green';
-        }
     }
 
     // Function to display all tasks
@@ -77,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: document.getElementById('title').value,
             team: document.getElementById('team').value,
             description: document.getElementById('description').value,
-            priority: document.getElementById('priority').value,
+            priority: dropdownSelected.textContent, // Get the selected priority from custom dropdown
             deadline: document.getElementById('deadline').value,
             assignee: document.getElementById('assignee').value
         };
@@ -94,7 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         taskForm.reset(); // Clear the form
-        document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
+        dropdownSelected.textContent = 'Select Priority'; // Reset custom dropdown text
+        dropdownSelected.style.color = '#000'; // Reset color
         displayTasks(); // Refresh the task table
     });
 
@@ -104,12 +128,21 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('title').value = task.title;
         document.getElementById('team').value = task.team;
         document.getElementById('description').value = task.description;
-        document.getElementById('priority').value = task.priority;
+        dropdownSelected.textContent = task.priority; // Set the custom dropdown text
+        dropdownSelected.style.color = getPriorityColor(task.priority); // Set color
         document.getElementById('deadline').value = task.deadline;
         document.getElementById('assignee').value = task.assignee;
 
         editIndex = index; // Set the current edit index
         document.querySelector('button[type="submit"]').textContent = 'Update Task'; // Change the button text to "Update Task"
+    }
+
+    // Function to get priority color
+    function getPriorityColor(priority) {
+        if (priority === 'High') return 'red';
+        if (priority === 'Medium') return 'orange';
+        if (priority === 'Low') return 'green';
+        return '#000'; // Default color
     }
 
     // Word count logic
@@ -183,9 +216,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-    // Add this inside the DOMContentLoaded event listener
+    // Reset button functionality
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
+        dropdownSelected.textContent = 'Select Priority'; // Reset custom dropdown text
+        dropdownSelected.style.color = '#000'; // Reset color
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
         editIndex = null; // Clear the edit index
         noResultsMessage.style.display = 'none'; // Hide no results message
