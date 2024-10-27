@@ -9,6 +9,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const noResultsMessage = document.getElementById('noResults');
     const resetButton = document.getElementById('resetButton');
 
+    const prioritySelect = document.getElementById('priority');
+    const originalLabel = document.querySelector('label[for="priority"]').textContent;
+
+    prioritySelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const description = selectedOption.getAttribute('data-description');
+        const label = document.querySelector('label[for="priority"]');
+        label.textContent = `${originalLabel} ${description}`;
+    });
+
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
 
