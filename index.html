@@ -5,55 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Engine Prototype</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Blinking Text Style */
+        #blink {
+            font-size: 14px; /* Font size */
+            font-weight: bold;
+            font-family: sans-serif;
+            margin-top: 20px; /* Space above the blinking text */
+            text-align: center; /* Center alignment */
+        }
+    </style>
 </head>
 <body>
     <!-- Main Container -->
     <div class="container">
         <h1>Task Engine</h1>
-        
-<head>
-    <title>
-        Blinking with JavaScript
-    </title>
-    <style>
-        /* Updated CSS to fit above Help & Documentation */
-        #blink {
-            font-size: 14px; /* Reduced the font size */
-            font-weight: bold;
-            font-family: sans-serif;
-            text-align: left;
-            margin-bottom: 10px; /* Space between blinking text and the button */
-        }
-    </style>
-</head>
 
-<body>
-    <!-- Blinking text -->
-    <p id="blink">
-        Hello Geeks, let's Blink
-    </p>
+        <!-- Multicolored Blinking Text -->
+        <p id="blink">Hello Geeks, let's Blink</p>
 
-    <!-- Help & Documentation Button -->
-    <button id="helpDocumentation" style="font-size: 16px; font-weight: bold;">
-        Help & Documentation
-    </button>
-
-    <script type="text/javascript">
-        let blink = document.getElementById('blink');
-
-        setInterval(function () {
-            blink.style.opacity =
-                (blink.style.opacity == 0 ? 1 : 0);
-        }, 1000);
-    </script>
-</body>
         <!-- Help and Documentation Button -->
         <button id="helpButton">Help & Documentation</button>
 
         <!-- Help Popup -->
         <div id="helpPopup" class="help-popup">
-            <p id="helpMessage">The "Task Engine" is a handy web app for managing tasks and keeping teams organized</p>
-                <p>The "Task Engine" is a handy web app for managing tasks and keeping teams organized!!You can easily create tasks, set deadlines, assign team members, and choose priorities. It makes searching and filtering tasks a breeze, helping everyone stay on top of their work.</p>
+            <p id="helpMessage">The "Task Engine" is a handy web app for managing tasks and keeping teams organized.</p>
+            <p>The "Task Engine" is a handy web app for managing tasks and keeping teams organized!! You can easily create tasks, set deadlines, assign team members, and choose priorities. It makes searching and filtering tasks a breeze, helping everyone stay on top of their work.</p>
             <p>Plus, you can edit or delete tasks as needed, so your projects can adapt on the fly!</p>
             <button id="closePopup">Close</button>
         </div>
@@ -141,5 +118,25 @@
 
     <!-- JavaScript -->
     <script src="javascript.js"></script>
+    <script>
+        // Blinking Text JavaScript
+        let blink = document.getElementById('blink');
+
+        // Array of colors for multicolored effect
+        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
+        let colorIndex = 0;
+
+        setInterval(function () {
+            // Toggle visibility for blinking effect
+            blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
+
+            // Change color periodically
+            if (blink.style.opacity == 1) {
+                blink.style.color = colors[colorIndex];
+                colorIndex = (colorIndex + 1) % colors.length; // Cycle through colors
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
+
