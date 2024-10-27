@@ -5,11 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Engine Prototype</title>
     <link rel="stylesheet" href="styles.css">
-</head>
+
 <body>
     <!-- Main Container -->
     <div class="container">
         <h1>Task Engine</h1>
+    <title>
+        Blinking with JavaScript
+    </title>
+    <style>
+        #blink {
+            font-size: 14px; /* Reduced the font size */
+            font-weight: bold;
+            font-family: sans-serif;
+            position: absolute; /* Use absolute positioning */
+            top: 20px; /* Adjusts the distance from the top */
+            left: 20px; /* Adjusts the distance from the left */
+            margin: 0; /* Remove any margin to keep it closer to the corner */
+        }
+    </style>
+</head>
+
+<body>
+    <p id="blink">
+        Hello Geeks, let's Blink
+    </p>
+    <script type="text/javascript">
+        let blink = document.getElementById('blink');
+
+        setInterval(function () {
+            blink.style.opacity =
+                (blink.style.opacity == 0 ? 1 : 0);
+        }, 1000);
+    </script>
+</body>
 
         <!-- Help and Documentation Button -->
         <button id="helpButton">Help & Documentation</button>
@@ -49,12 +78,12 @@
                         <option value="Documentation Team">Documentation Team</option>
                     </select>
 
-                   <label for="priority">Priority:</label>
-<select id="priority" required>
-    <option value="Low" data-description="- Can be addressed later">Low</option>
-    <option value="Medium" data-description="- Should be addressed soon">Medium</option>
-    <option value="High" data-description="- Needs immediate attention">High</option>
-</select>
+                    <label for="priority">Priority:</label>
+                    <select id="priority" required>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
 
                     <label for="assignee">Assignee:</label>
                     <select id="assignee" required>
