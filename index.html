@@ -16,7 +16,7 @@
             font-weight: bold;
             font-family: sans-serif;
             text-align: left;
-            margin-bottom: 7px;
+            margin-bottom: 12px;
         }
     </style>
 </head>
@@ -32,6 +32,10 @@
         setInterval(function () {
             blink.style.opacity =
                 (blink.style.opacity == 0 ? 1 : 0);
+       if (blink.style.opacity == 1) {
+                blink.style.color = colors[colorIndex];
+                colorIndex = (colorIndex + 1) % colors.length; // Cycle through colors
+            }
         }, 1000);
     </script>
 </body>
