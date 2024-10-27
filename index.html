@@ -5,37 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Engine Prototype</title>
     <link rel="stylesheet" href="styles.css">
-
+</head>
 <body>
     <!-- Main Container -->
     <div class="container">
         <h1>Task Engine</h1>
+        
+<head>
+    <title>
+        Blinking with JavaScript
+    </title>
     <style>
+        /* Updated CSS to fit above Help & Documentation */
         #blink {
             font-size: 14px; /* Reduced the font size */
             font-weight: bold;
             font-family: sans-serif;
             text-align: left;
-            margin-bottom: 12px;
+            margin-bottom: 10px; /* Space between blinking text and the button */
         }
     </style>
 </head>
 
 <body>
+    <!-- Blinking text -->
     <p id="blink">
-        Refer user guide for more info!
+        Hello Geeks, let's Blink
     </p>
+
+    <!-- Help & Documentation Button -->
+    <button id="helpDocumentation" style="font-size: 16px; font-weight: bold;">
+        Help & Documentation
+    </button>
+
     <script type="text/javascript">
         let blink = document.getElementById('blink');
-        const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
-        let colorIndex = 0;
+
         setInterval(function () {
             blink.style.opacity =
                 (blink.style.opacity == 0 ? 1 : 0);
         }, 1000);
     </script>
 </body>
-
         <!-- Help and Documentation Button -->
         <button id="helpButton">Help & Documentation</button>
 
