@@ -36,6 +36,47 @@ h1 {
     flex: 1;
     margin-right: 20px;
 }
+/* Custom dropdown container */
+.custom-dropdown {
+    position: relative;
+    width: 200px;
+    cursor: pointer;
+}
+
+.dropdown-selected {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fafafa;
+    font-size: 16px;
+}
+
+.dropdown-options {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    display: none;
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    z-index: 1;
+    max-height: 150px; /* Optional: add max-height with overflow for long lists */
+    overflow-y: auto;
+}
+
+.dropdown-options .option {
+    padding: 10px;
+    background-color: #fafafa;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-options .option:hover {
+    background-color: #f0f0f0;
+}
+
 
 .form-right {
     margin-right: 0;
