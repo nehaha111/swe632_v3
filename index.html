@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Engine Prototype</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <!-- Main Container -->
     <div class="container">
@@ -18,18 +16,10 @@
 
         <!-- Help Popup -->
         <div id="helpPopup" class="help-popup">
-            <div class="help-content">
-                <h2>Help & Documentation</h2>
-                <div class="help-slide">
-                    <p>The "Task Engine" is a handy web app for managing tasks and keeping teams organized.</p>
-                    <p>You can easily create tasks, set deadlines, assign team members, and choose priorities.</p>
-                </div>
-                <div class="help-slide">
-                    <p>It makes searching and filtering tasks a breeze, helping everyone stay on top of their work.</p>
-                    <p>Contact: John Doe, +123456789 for more information.</p>
-                </div>
-                <button id="closePopup">Close</button>
-            </div>
+            <p id="helpMessage">The "Task Engine" is a handy web app for managing tasks and keeping teams organized</p>
+                <p>The "Task Engine" is a handy web app for managing tasks and keeping teams organized!!You can easily create tasks, set deadlines, assign team members, and choose priorities. It makes searching and filtering tasks a breeze, helping everyone stay on top of their work.</p>
+            <p>Plus, you can edit or delete tasks as needed, so your projects can adapt on the fly!</p>
+            <button id="closePopup">Close</button>
         </div>
 
         <!-- Task Form -->
@@ -50,21 +40,32 @@
                 <div class="form-right">
                     <label for="team">Team:</label>
                     <select id="team" required>
-                        <!-- Team Options -->
+                        <option value="Development Team">Development Team</option>
+                        <option value="Design Team">Design Team</option>
+                        <option value="Quality Assurance Team">Quality Assurance Team</option>
+                        <option value="Business Analyst Team">Business Analyst Team</option>
+                        <option value="Marketing Team">Marketing Team</option>
+                        <option value="Support Team">Support Team</option>
+                        <option value="Documentation Team">Documentation Team</option>
                     </select>
 
                     <label for="priority">Priority:</label>
                     <select id="priority" required>
-                        <!-- Priority Options -->
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
                     </select>
 
                     <label for="assignee">Assignee:</label>
                     <select id="assignee" required>
-                        <!-- Assignee Options -->
+                        <option value="Member1">Member1</option>
+                        <option value="Member2">Member2</option>
+                        <option value="Member3">Member3</option>
+                        <option value="Member4">Member4</option>
                     </select>
 
                     <button type="submit">Add Task</button>
-                    <button type="button" id="resetButton">Reset</button>
+                    <button type="button" id="resetButton">Reset</button> 
                 </div>
             </form>
         </div>
@@ -88,7 +89,7 @@
         <table id="taskTable">
             <thead>
                 <tr>
-                    <th>Name of Task</th>
+                    <th>Name of task</th>
                     <th>Team</th>
                     <th>Description</th>
                     <th>Priority</th>
