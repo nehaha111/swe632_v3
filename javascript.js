@@ -2,111 +2,52 @@ document.addEventListener('DOMContentLoaded', function() {
     const taskForm = document.getElementById('taskForm');
     const taskTable = document.getElementById('taskTable').getElementsByTagName('tbody')[0];
     const searchInput = document.getElementById('search');
-    const filterSelect = document.getElementById('filter');
-    const descriptionInput = document.getElementById('description');
-    const wordCountDisplay = document.getElementById('wordCount');
-    const deadlineInput = document.getElementById('deadline');
-    const noResultsMessage = document.getElementById('noResults');
+    const filterInput = document.getElementById('filter');
     const resetButton = document.getElementById('resetButton');
+    const wordCountElement = document.getElementById('wordCount');
     const helpButton = document.getElementById('helpButton');
     const helpPopup = document.getElementById('helpPopup');
-    const nextSlide = document.getElementById('nextSlide');
-    const closePopupButton = document.getElementById('closePopup');
-
+    const closePopup = document.getElementById('closePopup');
+    const noResultsMessage = document.getElementById('noResults');
+    
     let tasks = [];
-    let editIndex = null;
-
-    function addTaskRow(task, index) {
-        const row = taskTable.insertRow();
-        row.innerHTML = `
-            <td>${task.title}</td>
-            <td>${task.team}</td>
-            <td>${task.description}</td>
-            <td>${task.priority}</td>
-            <td>${task.deadline}</td>
-            <td>${task.assignee}</td>
-            <td>
-                <select>
-                    <option value="Not Started">Not Started</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Blocked">Blocked</option>
-                </select>
-            </td>
-            <td>
-                <button class="edit-btn">Update</button>
-                <button class="delete-btn">Delete</button>
-            </td>
-        `;
-
-        row.querySelector('.edit-btn').addEventListener('click', () => {
-            editIndex = index;
-            fillForm(task);
-        });
-
-        row.querySelector('.delete-btn').addEventListener('click', () => {
-            tasks.splice(index, 1);
-            renderTasks();
-        });
-    }
-
-    function fillForm(task) {
-        document.getElementById('title').value = task.title;
-        descriptionInput.value = task.description;
-        deadlineInput.value = task.deadline;
-        document.getElementById('team').value = task.team;
-        document.getElementById('priority').value = task.priority;
-        document.getElementById('assignee').value = task.assignee;
-        wordCountDisplay.textContent = `${task.description.length}/30 words`;
-    }
-
-    function clearForm() {
-        taskForm.reset();
-        wordCountDisplay.textContent = '0/30 words';
-        editIndex = null;
-    }
-
-    function renderTasks() {
-        taskTable.innerHTML = '';
-        tasks.forEach((task, index) => addTaskRow(task, index));
-        if (tasks.length === 0) {
-            noResultsMessage.style.display = 'block';
-        } else {
-            noResultsMessage.style.display = 'none';
-        }
-    }
 
     taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const title = document.getElementById('title').value.trim();
-        const description = descriptionInput.value.trim();
-        const deadline = deadlineInput.value;
+        
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+        const deadline = document.getElementById('deadline').value;
         const team = document.getElementById('team').value;
         const priority = document.getElementById('priority').value;
         const assignee = document.getElementById('assignee').value;
 
-        if (title === '' || description === '' || deadline === '') {
-            alert('Please fill out all required fields.');
-            return;
-        }
+        const task = {
+            title,
+            description,
+            deadline,
+            team,
+            priority,
+            assignee,
+            status: 'Pending'
+        };
 
-        const task = { title, description, deadline, team, priority, assignee };
-
-        if (editIndex !== null) {
-            tasks[editIndex] = task;
-        } else {
-            tasks.push(task);
-        }
-
+        tasks.push(task);
         renderTasks();
-        clearForm();
+        taskForm.reset();
+        updateWordCount();
+    });
+
+    resetButton.addEventListener('click', function() {
+        taskForm.reset();
+        updateWordCount();
     });
 
     searchInput.addEventListener('input', function() {
-        const searchText = searchInput.value.toLowerCase();
-        const filteredTasks = tasks.filter(task =>
-            task.title.toLowerCase().includes(searchText) ||
-            task.description.toLowerCase().includes(searchText)
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredTasks = tasks.filter(task => 
+            task.title.toLowerCase().includes(searchTerm) || 
+            task.description.toLowerCase().includes(searchTerm)
         );
 
         if (filteredTasks.length === 0) {
@@ -115,39 +56,83 @@ document.addEventListener('DOMContentLoaded', function() {
             noResultsMessage.style.display = 'none';
         }
 
-        taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => addTaskRow(task, index));
+        renderTasks(filteredTasks);
     });
 
-    filterSelect.addEventListener('change', function() {
-        const filterValue = filterSelect.value;
-        const filteredTasks = tasks.filter(task => 
-            filterValue === '' || task.priority === filterValue
-        );
+    filterInput.addEventListener('change', function() {
+        const priorityFilter = filterInput.value;
+        const filteredTasks = priorityFilter ? 
+            tasks.filter(task => task.priority === priorityFilter) : 
+            tasks;
 
-        taskTable.innerHTML = '';
-        filteredTasks.forEach((task, index) => addTaskRow(task, index));
+        renderTasks(filteredTasks);
     });
 
-    resetButton.addEventListener('click', clearForm);
-
-    helpButton.addEventListener('click', () => {
-        helpPopup.style.display = 'flex';
+    helpButton.addEventListener('click', function() {
+        helpPopup.style.display = 'block';
     });
 
-    nextSlide.addEventListener('click', () => {
-        document.getElementById('slide1').style.display = 'none';
-        document.getElementById('slide2').style.display = 'block';
-    });
-
-    closePopupButton.addEventListener('click', () => {
+    closePopup.addEventListener('click', function() {
         helpPopup.style.display = 'none';
-        document.getElementById('slide1').style.display = 'block';
-        document.getElementById('slide2').style.display = 'none';
     });
 
-    descriptionInput.addEventListener('input', function() {
-        const wordCount = descriptionInput.value.length;
-        wordCountDisplay.textContent = `${wordCount}/30 words`;
-    });
+    function renderTasks(taskList = tasks) {
+        taskTable.innerHTML = '';
+
+        taskList.forEach((task, index) => {
+            const row = taskTable.insertRow();
+
+            row.insertCell(0).textContent = task.title;
+            row.insertCell(1).textContent = task.team;
+            row.insertCell(2).textContent = task.description;
+            row.insertCell(3).textContent = task.priority;
+            row.insertCell(4).textContent = task.deadline;
+            row.insertCell(5).textContent = task.assignee;
+            row.insertCell(6).textContent = task.status;
+
+            const actionCell = row.insertCell(7);
+            const editButton = document.createElement('button');
+            const deleteButton = document.createElement('button');
+
+            editButton.textContent = 'Edit';
+            deleteButton.textContent = 'Delete';
+
+            editButton.className = 'edit-btn';
+            deleteButton.className = 'delete-btn';
+
+            editButton.addEventListener('click', () => editTask(index));
+            deleteButton.addEventListener('click', () => deleteTask(index));
+
+            actionCell.appendChild(editButton);
+            actionCell.appendChild(deleteButton);
+        });
+    }
+
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        renderTasks();
+    }
+
+    function editTask(index) {
+        const task = tasks[index];
+
+        document.getElementById('title').value = task.title;
+        document.getElementById('description').value = task.description;
+        document.getElementById('deadline').value = task.deadline;
+        document.getElementById('team').value = task.team;
+        document.getElementById('priority').value = task.priority;
+        document.getElementById('assignee').value = task.assignee;
+
+        tasks.splice(index, 1);
+        renderTasks();
+    }
+
+    function updateWordCount() {
+        const descriptionInput = document.getElementById('description');
+        const wordCount = descriptionInput.value.split(/\s+/).filter(word => word.length > 0).length;
+        wordCountElement.textContent = `${wordCount}/30 words`;
+    }
+
+    document.getElementById('description').addEventListener('input', updateWordCount);
+    updateWordCount();
 });
