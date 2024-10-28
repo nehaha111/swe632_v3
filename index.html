@@ -15,7 +15,7 @@
             margin-bottom: 12px;
         }
 
-        /* New styles for the popup */
+        /* Popup styles */
         .popup {
             display: none;
             position: fixed;
@@ -58,7 +58,7 @@
         <!-- Help and Documentation Button -->
         <button id="helpButton">User Documentation</button>
 
-        <!-- New Help Popup -->
+        <!-- Help Popup -->
         <div id="helpPopup" class="popup">
             <div class="popup-content">
                 <div id="slide1">
@@ -186,23 +186,18 @@
     <script>
         // Blinking Text JavaScript
         let blink = document.getElementById('blink');
-
-        // Array of colors for multicolored effect
         const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
         let colorIndex = 0;
 
         setInterval(function () {
-            // Toggle visibility for blinking effect
             blink.style.opacity = (blink.style.opacity == 0 ? 1 : 0);
-
-            // Change color periodically
             if (blink.style.opacity == 1) {
                 blink.style.color = colors[colorIndex];
-                colorIndex = (colorIndex + 1) % colors.length; // Cycle through colors
+                colorIndex = (colorIndex + 1) % colors.length;
             }
         }, 1000);
 
-        // New JavaScript for the popup
+        // Popup JavaScript
         const helpButton = document.getElementById('helpButton');
         const helpPopup = document.getElementById('helpPopup');
         const closePopup = document.getElementById('closePopup');
