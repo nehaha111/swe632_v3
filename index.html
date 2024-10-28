@@ -8,12 +8,43 @@
     <style>
         /* Blinking Text Style */
         #blink {
-            font-size: 14px; /* Reduced the font size */
+            font-size: 14px;
             font-weight: bold;
             font-family: sans-serif;
             text-align: left;
             margin-bottom: 12px;
-             }
+        }
+
+        /* New styles for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            max-width: 80%;
+            width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .popup-content {
+            text-align: left;
+        }
+        
+        .popup-buttons {
+            text-align: right;
+            margin-top: 20px;
+        }
+        
+        .popup-buttons button {
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -27,12 +58,46 @@
         <!-- Help and Documentation Button -->
         <button id="helpButton">User Documentation</button>
 
-        <!-- Help Popup -->
-        <div id="helpPopup" class="help-popup">
-            <p id="helpMessage">The "Task Engine" is a handy web app for managing tasks and keeping teams organized.</p>
-            <p>The "Task Engine" is a handy web app for managing tasks and keeping teams organized!! You can easily create tasks, set deadlines, assign team members, and choose priorities. It makes searching and filtering tasks a breeze, helping everyone stay on top of their work.</p>
-            <p>Plus, you can edit or delete tasks as needed, so your projects can adapt on the fly!</p>
-            <button id="closePopup">Close</button>
+        <!-- New Help Popup -->
+        <div id="helpPopup" class="popup">
+            <div class="popup-content">
+                <div id="slide1">
+                    <h2>Welcome to Task Engine!</h2>
+                    <p>Unleash your productivity with Task Engine, your ultimate task management companion!</p>
+                    <p>This powerful web app is designed to help you:</p>
+                    <ul>
+                        <li><strong>Create Tasks:</strong> Effortlessly add tasks with just a few clicks.</li>
+                        <li><strong>Set Deadlines:</strong> Keep your projects on track by setting clear deadlines.</li>
+                        <li><strong>Assign Team Members:</strong> Collaborate seamlessly by assigning tasks to your team.</li>
+                        <li><strong>Prioritize Wisely:</strong> Use priority levels to focus on what matters most.</li>
+                        <li><strong>Search & Filter:</strong> Find tasks quickly with our intuitive search and filter options.</li>
+                        <li><strong>Edit & Delete:</strong> Stay flexible by editing or removing tasks as needed.</li>
+                    </ul>
+                    <p>Whether you're managing a small project or coordinating a large team, Task Engine is here to streamline your workflow and boost your efficiency. Let's get started and conquer those tasks!</p>
+                </div>
+                <div id="slide2" style="display: none;">
+                    <h2>Need Assistance?</h2>
+                    <p><strong>Feeling stuck?</strong> Don't worry! Reach out to your HR Manager:</p>
+                    <p><strong>Name:</strong> Jane Smith</p>
+                    <p><strong>Email:</strong> jane.smith@company.com</p>
+                    <p><strong>Phone:</strong> +1 (987) 654-3210</p>
+                    <p><strong>Available Hours:</strong> Monday to Friday, 9 AM - 5 PM</p>
+
+                    <hr>
+
+                    <p>If you're facing issues with the app, our IT Help Desk is here to help:</p>
+                    <p><strong>Email:</strong> it.support@company.com</p>
+                    <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                    <p><strong>Available Hours:</strong> 24/7 Support</p>
+
+                    <p>We're committed to ensuring you have the best experience possible. Don't hesitate to reach out!</p>
+                </div>
+            </div>
+            <div class="popup-buttons">
+                <button id="prevSlide" style="display: none;">Previous</button>
+                <button id="nextSlide">Next</button>
+                <button id="closePopup">Close</button>
+            </div>
         </div>
 
         <!-- Task Form -->
@@ -136,6 +201,49 @@
                 colorIndex = (colorIndex + 1) % colors.length; // Cycle through colors
             }
         }, 1000);
+
+        // New JavaScript for the popup
+        const helpButton = document.getElementById('helpButton');
+        const helpPopup = document.getElementById('helpPopup');
+        const closePopup = document.getElementById('closePopup');
+        const nextSlide = document.getElementById('nextSlide');
+        const prevSlide = document.getElementById('prevSlide');
+        const slide1 = document.getElementById('slide1');
+        const slide2 = document.getElementById('slide2');
+
+        helpButton.addEventListener('click', () => {
+            helpPopup.style.display = 'block';
+        });
+
+        closePopup.addEventListener('click', () => {
+            helpPopup.style.display = 'none';
+            slide1.style.display = 'block';
+            slide2.style.display = 'none';
+            nextSlide.textContent = 'Next';
+            prevSlide.style.display = 'none';
+        });
+
+        nextSlide.addEventListener('click', () => {
+            if (slide1.style.display !== 'none') {
+                slide1.style.display = 'none';
+                slide2.style.display = 'block';
+                nextSlide.textContent = 'Close';
+                prevSlide.style.display = 'inline-block';
+            } else {
+                helpPopup.style.display = 'none';
+                slide1.style.display = 'block';
+                slide2.style.display = 'none';
+                nextSlide.textContent = 'Next';
+                prevSlide.style.display = 'none';
+            }
+        });
+
+        prevSlide.addEventListener('click', () => {
+            slide2.style.display = 'none';
+            slide1.style.display = 'block';
+            nextSlide.textContent = 'Next';
+            prevSlide.style.display = 'none';
+        });
     </script>
 </body>
 </html>
