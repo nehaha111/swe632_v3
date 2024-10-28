@@ -223,19 +223,15 @@
                 slide1.style.display = 'none';
                 slide2.style.display = 'block';
                 nextSlide.textContent = 'Close';
-                prevSlide.style.display = 'inline-block';
+                prevSlide.style.display = 'inline';
             } else {
                 helpPopup.style.display = 'none';
-                slide1.style.display = 'block';
-                slide2.style.display = 'none';
-                nextSlide.textContent = 'Next';
-                prevSlide.style.display = 'none';
             }
         });
 
         prevSlide.addEventListener('click', () => {
-            slide2.style.display = 'none';
             slide1.style.display = 'block';
+            slide2.style.display = 'none';
             nextSlide.textContent = 'Next';
             prevSlide.style.display = 'none';
         });
