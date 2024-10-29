@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
     let tasks = [];
     let editIndex = null;
 
-    // Function to add a row to the task table
     function addTaskRow(task, index) {
         const row = taskTable.insertRow();
         row.innerHTML = `
@@ -40,26 +39,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </td>
         `;
 
-        // Delete functionality with confirmation prompt and message
         row.querySelector('.delete-btn').addEventListener('click', () => {
             if (confirm('Are you sure you want to delete this task?')) {
                 tasks.splice(index, 1);
                 displayTasks();
-                showMessage('Task deleted successfully!');
+                showMessage('Task deleted successfully!'); // Show message on delete
             }
         });
 
-        // Edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
             editTask(index);
         });
 
-        // Set priority color
         const priorityCell = row.cells[3];
         priorityCell.style.color = task.priority === 'High' ? 'red' : task.priority === 'Medium' ? 'orange' : 'green';
     }
 
-    // Display all tasks
     function displayTasks() {
         taskTable.innerHTML = '';
         tasks.forEach((task, index) => {
@@ -67,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Popup message function
     function showMessage(message) {
         const popup = document.createElement('div');
         popup.className = 'popup';
@@ -77,12 +71,20 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.body.appendChild(popup);
 
-        // Close button functionality
+        popup.style.position = 'fixed';
+        popup.style.bottom = '20px';
+        popup.style.left = '50%';
+        popup.style.transform = 'translateX(-50%)';
+        popup.style.backgroundColor = '#333';
+        popup.style.color = '#fff';
+        popup.style.padding = '10px';
+        popup.style.borderRadius = '5px';
+        popup.style.zIndex = '1000';
+
         popup.querySelector('.close-btn').addEventListener('click', () => {
             document.body.removeChild(popup);
         });
 
-        // Auto remove after 3 seconds
         setTimeout(() => {
             if (document.body.contains(popup)) {
                 document.body.removeChild(popup);
@@ -90,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // Add or update a task
     taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
 
@@ -104,28 +105,24 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (editIndex === null) {
-            // Confirmation for adding a task
             if (confirm('Are you sure you want to add this task?')) {
                 tasks.push(newTask);
                 showMessage('Task added successfully!');
                 taskForm.reset();
-                displayTasks(); // Refresh table
             }
         } else {
-            // Confirmation before updating a task
             if (confirm('Are you sure you want to update this task?')) {
                 tasks[editIndex] = newTask;
                 showMessage('Task updated successfully!');
                 editIndex = null;
                 taskForm.reset();
-                displayTasks();
             }
         }
 
         document.querySelector('button[type="submit"]').textContent = 'Add Task';
+        displayTasks();
     });
 
-    // Fill form for editing
     function editTask(index) {
         const task = tasks[index];
         document.getElementById('title').value = task.title;
@@ -139,17 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('button[type="submit"]').textContent = 'Update Task';
     }
 
-    // Word count logic
     descriptionInput.addEventListener('input', function() {
         const wordCount = descriptionInput.value.split(/\s+/).filter(word => word.length > 0).length;
         wordCountDisplay.textContent = `${wordCount}/30 words`;
         wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888';
     });
 
-    // Date input restrictions
-    deadlineInput.setAttribute('min', new Date().toISOString().split('T')[0]);
+    const today = new Date().toISOString().split('T')[0];
+    deadlineInput.setAttribute('min', today);
 
-    // Task filter logic
     function filterTasks() {
         const searchQuery = searchInput.value.toLowerCase();
         const filterValue = filterSelect.value;
@@ -179,17 +174,15 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', filterTasks);
     filterSelect.addEventListener('change', filterTasks);
 
-    // Help Popup Logic
     helpButton.addEventListener('click', function() {
         helpPopup.style.display = 'block';
-        helpMessage.textContent = "This is the Help section!"; // Adjust help text here
+        helpMessage.textContent = "This is a task management application where you can create, edit, and delete tasks, set deadlines, assign them to team members, and filter tasks by priority.";
     });
 
     closePopupButton.addEventListener('click', function() {
         helpPopup.style.display = 'none';
     });
 
-    // Reset button functionality
     resetButton.addEventListener('click', function() {
         taskForm.reset();
         document.querySelector('button[type="submit"]').textContent = 'Add Task';
