@@ -35,6 +35,7 @@
         
         .popup-content {
             text-align: left;
+            color: black; /* Ensure popup text is black */
         }
         
         .popup-buttons {
@@ -94,8 +95,8 @@
                 </div>
             </div>
             <div class="popup-buttons">
-                <button id="prevSlide" style="display: none;">Previous</button>
-                <button id="nextSlide">Next</button>
+                <button id="prevSlide" style="display: none;">Previous Slide</button>
+                <button id="nextSlide">Next Slide</button>
                 <button id="closePopup">Close</button>
             </div>
         </div>
@@ -214,7 +215,7 @@
             helpPopup.style.display = 'none';
             slide1.style.display = 'block';
             slide2.style.display = 'none';
-            nextSlide.textContent = 'Next';
+            nextSlide.textContent = 'Next Slide';
             prevSlide.style.display = 'none';
         });
 
@@ -223,17 +224,23 @@
                 slide1.style.display = 'none';
                 slide2.style.display = 'block';
                 nextSlide.textContent = 'Close';
-                prevSlide.style.display = 'inline';
+                prevSlide.style.display = 'block';
             } else {
                 helpPopup.style.display = 'none';
             }
         });
 
         prevSlide.addEventListener('click', () => {
-            slide1.style.display = 'block';
             slide2.style.display = 'none';
-            nextSlide.textContent = 'Next';
+            slide1.style.display = 'block';
+            nextSlide.textContent = 'Next Slide';
             prevSlide.style.display = 'none';
+        });
+
+        // Reset Button
+        document.getElementById('resetButton').addEventListener('click', function () {
+            document.getElementById('taskForm').reset();
+            document.getElementById('wordCount').textContent = "0/30 words";
         });
     </script>
 </body>
