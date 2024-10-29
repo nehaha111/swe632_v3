@@ -35,7 +35,7 @@
         
         .popup-content {
             text-align: left;
-            color: black; /* Ensure popup text is black */
+            color: black; /* Ensuring text is pitch black */
         }
         
         .popup-buttons {
@@ -96,8 +96,8 @@
             </div>
             <div class="popup-buttons">
                 <button id="prevSlide" style="display: none;">Previous Slide</button>
-                <button id="nextSlide">Next Slide</button>
                 <button id="closePopup">Close</button>
+                <button id="nextSlide" style="display: inline;">Next Slide</button>
             </div>
         </div>
 
@@ -215,33 +215,26 @@
             helpPopup.style.display = 'none';
             slide1.style.display = 'block';
             slide2.style.display = 'none';
-            nextSlide.textContent = 'Next Slide';
-            prevSlide.style.display = 'none';
+            nextSlide.style.display = 'inline'; // Show Next Slide button
+            prevSlide.style.display = 'none'; // Hide Previous Slide button
         });
 
         nextSlide.addEventListener('click', () => {
-            if (slide1.style.display !== 'none') {
-                slide1.style.display = 'none';
-                slide2.style.display = 'block';
-                nextSlide.textContent = 'Close';
-                prevSlide.style.display = 'block';
-            } else {
-                helpPopup.style.display = 'none';
-            }
+            slide1.style.display = 'none';
+            slide2.style.display = 'block';
+            nextSlide.style.display = 'none'; // Hide Next Slide button
+            prevSlide.style.display = 'inline'; // Show Previous Slide button
         });
 
         prevSlide.addEventListener('click', () => {
-            slide2.style.display = 'none';
             slide1.style.display = 'block';
-            nextSlide.textContent = 'Next Slide';
-            prevSlide.style.display = 'none';
+            slide2.style.display = 'none';
+            nextSlide.style.display = 'inline'; // Show Next Slide button
+            prevSlide.style.display = 'none'; // Hide Previous Slide button
         });
 
-        // Reset Button
-        document.getElementById('resetButton').addEventListener('click', function () {
-            document.getElementById('taskForm').reset();
-            document.getElementById('wordCount').textContent = "0/30 words";
-        });
+        // Form JavaScript and other functionalities here
     </script>
 </body>
 </html>
+
