@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const helpMessage = document.getElementById('helpMessage');
 
     let tasks = [];
-    let editIndex = null; // Track the index of the task being edited
+    let editIndex = null;
 
     // Function to add a row to the task table
     function addTaskRow(task, index) {
@@ -40,40 +40,34 @@ document.addEventListener('DOMContentLoaded', function() {
             </td>
         `;
 
-        // Add delete functionality
+        // Delete functionality with confirmation prompt and message
         row.querySelector('.delete-btn').addEventListener('click', () => {
             if (confirm('Are you sure you want to delete this task?')) {
-                tasks.splice(index, 1); // Remove the task from the list
-                displayTasks(); // Re-display the tasks
-                showMessage('Task deleted successfully!'); // Confirmation message
+                tasks.splice(index, 1);
+                displayTasks();
+                showMessage('Task deleted successfully!');
             }
         });
 
-        // Add edit functionality
+        // Edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            editTask(index); // Directly call editTask without confirmation
+            editTask(index);
         });
 
-        // Apply priority color to the priority cell
+        // Set priority color
         const priorityCell = row.cells[3];
-        if (task.priority === 'High') {
-            priorityCell.style.color = 'red';
-        } else if (task.priority === 'Medium') {
-            priorityCell.style.color = 'orange';
-        } else if (task.priority === 'Low') {
-            priorityCell.style.color = 'green';
-        }
+        priorityCell.style.color = task.priority === 'High' ? 'red' : task.priority === 'Medium' ? 'orange' : 'green';
     }
 
-    // Function to display all tasks
+    // Display all tasks
     function displayTasks() {
-        taskTable.innerHTML = ''; // Clear the table
+        taskTable.innerHTML = '';
         tasks.forEach((task, index) => {
-            addTaskRow(task, index); // Add each task to the table
+            addTaskRow(task, index);
         });
     }
 
-  // Function to display a popup message
+    // Popup message function
     function showMessage(message) {
         const popup = document.createElement('div');
         popup.className = 'popup';
@@ -88,14 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.removeChild(popup);
         });
 
-        // Automatically remove popup after 3 seconds
+        // Auto remove after 3 seconds
         setTimeout(() => {
             if (document.body.contains(popup)) {
                 document.body.removeChild(popup);
             }
         }, 3000);
     }
-
 
     // Add or update a task
     taskForm.addEventListener('submit', function(event) {
@@ -111,27 +104,28 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (editIndex === null) {
-            // Prompt for confirmation when adding a new task
+            // Confirmation for adding a task
             if (confirm('Are you sure you want to add this task?')) {
                 tasks.push(newTask);
-                showMessage('Task added successfully!'); // Confirmation message
-                taskForm.reset(); // Clear the form
+                showMessage('Task added successfully!');
+                taskForm.reset();
+                displayTasks(); // Refresh table
             }
         } else {
-            // Prompt for confirmation before updating the existing task
+            // Confirmation before updating a task
             if (confirm('Are you sure you want to update this task?')) {
-                tasks[editIndex] = newTask; // Update the existing task
-                showMessage('Task updated successfully!'); // Confirmation message
-                editIndex = null; // Reset editIndex after updating
-                taskForm.reset(); // Clear the form
+                tasks[editIndex] = newTask;
+                showMessage('Task updated successfully!');
+                editIndex = null;
+                taskForm.reset();
+                displayTasks();
             }
         }
 
-        document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
-        displayTasks(); // Refresh the task table
+        document.querySelector('button[type="submit"]').textContent = 'Add Task';
     });
 
-    // Function to fill the form with task data for editing
+    // Fill form for editing
     function editTask(index) {
         const task = tasks[index];
         document.getElementById('title').value = task.title;
@@ -141,8 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('deadline').value = task.deadline;
         document.getElementById('assignee').value = task.assignee;
 
-        editIndex = index; // Set the current edit index
-        document.querySelector('button[type="submit"]').textContent = 'Update Task'; // Change the button text to "Update Task"
+        editIndex = index;
+        document.querySelector('button[type="submit"]').textContent = 'Update Task';
     }
 
     // Word count logic
@@ -152,11 +146,10 @@ document.addEventListener('DOMContentLoaded', function() {
         wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888';
     });
 
-    // Set date input to only show future dates
-    const today = new Date().toISOString().split('T')[0];
-    deadlineInput.setAttribute('min', today);
+    // Date input restrictions
+    deadlineInput.setAttribute('min', new Date().toISOString().split('T')[0]);
 
-    // Function to filter tasks by search or priority
+    // Task filter logic
     function filterTasks() {
         const searchQuery = searchInput.value.toLowerCase();
         const filterValue = filterSelect.value;
@@ -171,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
             (filterValue === '' || task.priority === filterValue)
         );
 
-        taskTable.innerHTML = ''; // Clear the table
+        taskTable.innerHTML = '';
 
         if (filteredTasks.length > 0) {
             filteredTasks.forEach((task, index) => {
@@ -186,24 +179,21 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', filterTasks);
     filterSelect.addEventListener('change', filterTasks);
 
-    // Help and Documentation Popup Logic
+    // Help Popup Logic
     helpButton.addEventListener('click', function() {
         helpPopup.style.display = 'block';
-        helpMessage.textContent = "Hey!"; // Show "Hello" message
+        helpMessage.textContent = "This is the Help section!"; // Adjust help text here
     });
 
-   // Close help popup
-    document.getElementById('closePopup').addEventListener('click', function() {
-        document.getElementById('helpPopup').style.display = 'none';
+    closePopupButton.addEventListener('click', function() {
+        helpPopup.style.display = 'none';
     });
-
 
     // Reset button functionality
     resetButton.addEventListener('click', function() {
-        taskForm.reset(); // Reset the form fields to their initial values
-        document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
-        editIndex = null; // Clear the edit index
-        noResultsMessage.style.display = 'none'; // Hide no results message
+        taskForm.reset();
+        document.querySelector('button[type="submit"]').textContent = 'Add Task';
+        editIndex = null;
+        noResultsMessage.style.display = 'none';
     });
 });
-
