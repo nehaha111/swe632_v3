@@ -130,7 +130,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const filteredTasks = tasks.filter(task => 
             (task.title.toLowerCase().includes(searchQuery) || 
-            task.description.toLowerCase().includes(searchQuery)) &&
+            task.team.toLowerCase().includes(searchQuery) || 
+            task.description.toLowerCase().includes(searchQuery) ||
+            task.priority.toLowerCase().includes(searchQuery) || 
+            task.deadline.toLowerCase().includes(searchQuery) || 
+            task.assignee.toLowerCase().includes(searchQuery)) &&
             (filterValue === '' || task.priority === filterValue)
         );
 
@@ -183,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-    // Add this inside the DOMContentLoaded event listener
+    // Reset button functionality
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
