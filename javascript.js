@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const deadlineInput = document.getElementById('deadline');
     const noResultsMessage = document.getElementById('noResults');
     const resetButton = document.getElementById('resetButton');
+    const helpButton = document.getElementById('helpButton');
+    const closePopupButton = document.getElementById('closePopup');
+    const helpPopup = document.getElementById('helpPopup');
+    const helpMessage = document.getElementById('helpMessage');
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
@@ -69,39 +73,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-   // Add or update a task
-taskForm.addEventListener('submit', function(event) {
-    event.preventDefault();
+    // Add or update a task
+    taskForm.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    const newTask = {
-        title: document.getElementById('title').value,
-        team: document.getElementById('team').value,
-        description: document.getElementById('description').value,
-        priority: document.getElementById('priority').value,
-        deadline: document.getElementById('deadline').value,
-        assignee: document.getElementById('assignee').value
-    };
+        const newTask = {
+            title: document.getElementById('title').value,
+            team: document.getElementById('team').value,
+            description: document.getElementById('description').value,
+            priority: document.getElementById('priority').value,
+            deadline: document.getElementById('deadline').value,
+            assignee: document.getElementById('assignee').value
+        };
 
-    if (editIndex === null) {
-        // Prompt for confirmation when adding a new task
-        if (confirm('Are you sure you want to update this task?')) {
-            tasks.push(newTask);
-            showMessage('Task added successfully!'); // Confirmation message
+        if (editIndex === null) {
+            // Prompt for confirmation when adding a new task
+            if (confirm('Are you sure you want to add this task?')) {
+                tasks.push(newTask);
+                showMessage('Task added successfully!'); // Confirmation message
+            }
+        } else {
+            // Prompt for confirmation before updating the existing task
+            if (confirm('Are you sure you want to update this task?')) {
+                tasks[editIndex] = newTask; // Update the existing task
+                showMessage('Task updated successfully!'); // Confirmation message
+            }
+            editIndex = null; // Reset editIndex after updating
         }
-    } else {
-        // Prompt for confirmation before updating the existing task
-        if (confirm('Are you sure you want to update this task?')) {
-            tasks[editIndex] = newTask; // Update the existing task
-            showMessage('Task updated successfully!'); // Confirmation message
-        }
-        editIndex = null; // Reset editIndex after updating
-    }
 
-    taskForm.reset(); // Clear the form
-    document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
-    displayTasks(); // Refresh the task table
-});
-
+        taskForm.reset(); // Clear the form
+        document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
+        displayTasks(); // Refresh the task table
+    });
 
     // Function to fill the form with task data for editing
     function editTask(index) {
@@ -182,17 +185,17 @@ taskForm.addEventListener('submit', function(event) {
     }
 
     // Help and Documentation Popup Logic
-    document.getElementById('helpButton').addEventListener('click', function() {
-        document.getElementById('helpPopup').style.display = 'block';
-        document.getElementById('helpMessage').textContent = "Hey!"; // Show "Hello" message
+    helpButton.addEventListener('click', function() {
+        helpPopup.style.display = 'block';
+        helpMessage.textContent = "Hey!"; // Show "Hello" message
     });
 
     // Close help popup
-    document.getElementById('closePopup').addEventListener('click', function() {
-        document.getElementById('helpPopup').style.display = 'none';
+    closePopupButton.addEventListener('click', function() {
+        helpPopup.style.display = 'none';
     });
 
-    // Add this inside the DOMContentLoaded event listener
+    // Reset button functionality
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
