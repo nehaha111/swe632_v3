@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm('Are you sure you want to delete this task?')) {
                 tasks.splice(index, 1); // Remove the task from the list
                 displayTasks(); // Re-display the tasks
-                showMessage('Task deleted successfully!');
+                showMessage('Task deleted successfully!'); // Confirmation message
             }
         });
 
@@ -87,26 +87,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (editIndex === null) {
             // Add new task
-            const confirmAdd = confirm('Are you sure you want to add this task?');
-            if (confirmAdd) {
-                tasks.push(newTask);
-                showMessage('Task added successfully!');
-                taskForm.reset(); // Clear the form
-                displayTasks(); // Refresh the task table
-            }
+            tasks.push(newTask);
+            showMessage('Task added successfully!'); // Confirmation message
         } else {
             // Update the existing task
-            const confirmUpdate = confirm('Do you want to make these changes to your entry?');
-            if (confirmUpdate) {
-                tasks[editIndex] = newTask;
-                showMessage('Task updated successfully!');
-                editIndex = null;
-                taskForm.reset(); // Clear the form
-                displayTasks(); // Refresh the task table
-            }
+            tasks[editIndex] = newTask;
+            showMessage('Task updated successfully!'); // Confirmation message
+            editIndex = null;
         }
 
+        taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
+        displayTasks(); // Refresh the task table
     });
 
     // Function to fill the form with task data for editing
@@ -141,10 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const filteredTasks = tasks.filter(task => 
             (task.title.toLowerCase().includes(searchQuery) || 
-            task.team.toLowerCase().includes(searchQuery) || 
             task.description.toLowerCase().includes(searchQuery) ||
-            task.priority.toLowerCase().includes(searchQuery) || 
-            task.deadline.toLowerCase().includes(searchQuery) || 
+            task.team.toLowerCase().includes(searchQuery) ||
+            task.priority.toLowerCase().includes(searchQuery) ||
+            task.deadline.toLowerCase().includes(searchQuery) ||
             task.assignee.toLowerCase().includes(searchQuery)) &&
             (filterValue === '' || task.priority === filterValue)
         );
@@ -198,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-    // Reset button functionality
+    // Add this inside the DOMContentLoaded event listener
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
