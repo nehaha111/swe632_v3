@@ -73,39 +73,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-   // Function to display a popup message
-function showMessage(message) {
-    const popup = document.createElement('div');
-    popup.className = 'popup';
-    popup.innerHTML = `
-        <p>${message}</p>
-        <button class="close-btn">Close</button>
-    `;
+  // Function to display a popup message
+    function showMessage(message) {
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+            <p>${message}</p>
+            <button class="close-btn">Close</button>
+        `;
+        document.body.appendChild(popup);
 
-    // Set styles for the popup
-    popup.style.position = 'fixed';
-    popup.style.top = '20px';
-    popup.style.right = '20px';
-    popup.style.backgroundColor = '#f0f0f0';
-    popup.style.padding = '10px';
-    popup.style.border = '1px solid #ccc';
-    popup.style.borderRadius = '5px';
-    popup.style.zIndex = '1000';
-
-    document.body.appendChild(popup);
-
-    // Close button functionality
-    popup.querySelector('.close-btn').addEventListener('click', () => {
-        document.body.removeChild(popup);
-    });
-
-    // Automatically remove popup after 3 seconds
-    setTimeout(() => {
-        if (document.body.contains(popup)) {
+        // Close button functionality
+        popup.querySelector('.close-btn').addEventListener('click', () => {
             document.body.removeChild(popup);
-        }
-    }, 3000);
-}
+        });
+
+        // Automatically remove popup after 3 seconds
+        setTimeout(() => {
+            if (document.body.contains(popup)) {
+                document.body.removeChild(popup);
+            }
+        }, 3000);
+    }
 
 
     // Add or update a task
@@ -203,10 +192,11 @@ function showMessage(message) {
         helpMessage.textContent = "Hey!"; // Show "Hello" message
     });
 
-    // Close help popup
-    closePopupButton.addEventListener('click', function() {
-        helpPopup.style.display = 'none';
+   // Close help popup
+    document.getElementById('closePopup').addEventListener('click', function() {
+        document.getElementById('helpPopup').style.display = 'none';
     });
+
 
     // Reset button functionality
     resetButton.addEventListener('click', function() {
