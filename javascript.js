@@ -69,36 +69,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add or update a task
-    taskForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+   // Add or update a task
+taskForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        const newTask = {
-            title: document.getElementById('title').value,
-            team: document.getElementById('team').value,
-            description: document.getElementById('description').value,
-            priority: document.getElementById('priority').value,
-            deadline: document.getElementById('deadline').value,
-            assignee: document.getElementById('assignee').value
-        };
+    const newTask = {
+        title: document.getElementById('title').value,
+        team: document.getElementById('team').value,
+        description: document.getElementById('description').value,
+        priority: document.getElementById('priority').value,
+        deadline: document.getElementById('deadline').value,
+        assignee: document.getElementById('assignee').value
+    };
 
-        if (editIndex === null) {
-            // Prompt for confirmation when adding a new task
-            if (confirm('Are you sure you want to add this task?')) {
-                tasks.push(newTask);
-                showMessage('Task added successfully!'); // Confirmation message
-            }
-        } else {
-            // Update the existing task directly without confirmation
-            tasks[editIndex] = newTask;
-            showMessage('Task updated successfully!'); // Confirmation message
-            editIndex = null; // Reset editIndex
+    if (editIndex === null) {
+        // Prompt for confirmation when adding a new task
+        if (confirm('Are you sure you want to update this task?')) {
+            tasks.push(newTask);
+            showMessage('Task added successfully!'); // Confirmation message
         }
+    } else {
+        // Prompt for confirmation before updating the existing task
+        if (confirm('Are you sure you want to update this task?')) {
+            tasks[editIndex] = newTask; // Update the existing task
+            showMessage('Task updated successfully!'); // Confirmation message
+        }
+        editIndex = null; // Reset editIndex after updating
+    }
 
-        taskForm.reset(); // Clear the form
-        document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
-        displayTasks(); // Refresh the task table
-    });
+    taskForm.reset(); // Clear the form
+    document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
+    displayTasks(); // Refresh the task table
+});
+
 
     // Function to fill the form with task data for editing
     function editTask(index) {
