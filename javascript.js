@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
+    let isUpdating = false; // Flag to track if updating
 
     // Function to add a row to the task table
     function addTaskRow(task, index) {
@@ -47,10 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            const confirmUpdate = confirm('Do you want to make these changes to your entry?');
-            if (confirmUpdate) {
-                editTask(index);
-            }
+            editTask(index); // Fill the form for editing
         });
 
         // Apply priority color to the priority cell
@@ -92,13 +90,19 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Update the existing task
             tasks[editIndex] = newTask;
-            showMessage('Task updated successfully!'); // Confirmation message
-            editIndex = null;
+            isUpdating = true; // Set the updating flag
         }
 
         taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
         displayTasks(); // Refresh the task table
+
+        // Show update confirmation after form submission
+        if (isUpdating) {
+            showMessage('Task updated successfully!'); // Confirmation message
+            editIndex = null; // Clear edit index after update
+            isUpdating = false; // Reset the flag
+        }
     });
 
     // Function to fill the form with task data for editing
@@ -190,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-    // Add this inside the DOMContentLoaded event listener
+    // Reset button functionality
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
