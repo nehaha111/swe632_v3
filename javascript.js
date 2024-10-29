@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
-    let isUpdating = false; // Flag to track if updating
 
     // Function to add a row to the task table
     function addTaskRow(task, index) {
@@ -48,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            editTask(index); // Fill the form for editing
+            editTask(index); // Directly call editTask without confirmation
         });
 
         // Apply priority color to the priority cell
@@ -84,25 +83,21 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (editIndex === null) {
-            // Add new task
-            tasks.push(newTask);
-            showMessage('Task added successfully!'); // Confirmation message
+            // Prompt for confirmation when adding a new task
+            if (confirm('Are you sure you want to add this task?')) {
+                tasks.push(newTask);
+                showMessage('Task added successfully!'); // Confirmation message
+            }
         } else {
-            // Update the existing task
+            // Update the existing task directly without confirmation
             tasks[editIndex] = newTask;
-            isUpdating = true; // Set the updating flag
+            showMessage('Task updated successfully!'); // Confirmation message
+            editIndex = null; // Reset editIndex
         }
 
         taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
         displayTasks(); // Refresh the task table
-
-        // Show update confirmation after form submission
-        if (isUpdating) {
-            showMessage('Task updated successfully!'); // Confirmation message
-            editIndex = null; // Clear edit index after update
-            isUpdating = false; // Reset the flag
-        }
     });
 
     // Function to fill the form with task data for editing
@@ -194,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-    // Reset button functionality
+    // Add this inside the DOMContentLoaded event listener
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
