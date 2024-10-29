@@ -73,6 +73,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Function to display a popup message
+    function showMessage(message) {
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+            <p>${message}</p>
+            <button class="close-btn">Close</button>
+        `;
+        document.body.appendChild(popup);
+
+        // Close button functionality
+        popup.querySelector('.close-btn').addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        // Automatically remove popup after 3 seconds
+        setTimeout(() => {
+            if (document.body.contains(popup)) {
+                document.body.removeChild(popup);
+            }
+        }, 3000);
+    }
+
     // Add or update a task
     taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -91,17 +114,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm('Are you sure you want to add this task?')) {
                 tasks.push(newTask);
                 showMessage('Task added successfully!'); // Confirmation message
+                taskForm.reset(); // Clear the form
             }
         } else {
             // Prompt for confirmation before updating the existing task
             if (confirm('Are you sure you want to update this task?')) {
                 tasks[editIndex] = newTask; // Update the existing task
                 showMessage('Task updated successfully!'); // Confirmation message
+                editIndex = null; // Reset editIndex after updating
+                taskForm.reset(); // Clear the form
             }
-            editIndex = null; // Reset editIndex after updating
         }
 
-        taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
         displayTasks(); // Refresh the task table
     });
@@ -160,29 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchInput.addEventListener('input', filterTasks);
     filterSelect.addEventListener('change', filterTasks);
-
-    // Function to display a popup message
-    function showMessage(message) {
-        const popup = document.createElement('div');
-        popup.className = 'popup';
-        popup.innerHTML = `
-            <p>${message}</p>
-            <button class="close-btn">Close</button>
-        `;
-        document.body.appendChild(popup);
-
-        // Close button functionality
-        popup.querySelector('.close-btn').addEventListener('click', () => {
-            document.body.removeChild(popup);
-        });
-
-        // Automatically remove popup after 3 seconds
-        setTimeout(() => {
-            if (document.body.contains(popup)) {
-                document.body.removeChild(popup);
-            }
-        }, 3000);
-    }
 
     // Help and Documentation Popup Logic
     helpButton.addEventListener('click', function() {
