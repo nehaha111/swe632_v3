@@ -207,6 +207,9 @@
         </table>
     </div>
 
+    <!-- Popup container for messages -->
+    <div id="popupContainer" style="display: none;"></div>
+
     <!-- JavaScript -->
     <script src="javascript.js"></script>
     <script>
@@ -232,29 +235,36 @@
         const slide1 = document.getElementById('slide1');
         const slide2 = document.getElementById('slide2');
 
-        helpButton.addEventListener('click', () => {
+        let currentSlide = 1;
+
+        helpButton.onclick = function() {
             helpPopup.style.display = 'block';
-        });
+        };
 
-        closePopup.addEventListener('click', () => {
+        closePopup.onclick = function() {
             helpPopup.style.display = 'none';
-        });
+        };
 
-        nextSlide.addEventListener('click', () => {
-            slide1.style.display = 'none';
-            slide2.style.display = 'block';
-            nextSlide.style.display = 'none'; // Hide Next Slide button
-            prevSlide.style.display = 'inline'; // Show Previous Slide button
-        });
+        nextSlide.onclick = function() {
+            if (currentSlide === 1) {
+                slide1.style.display = 'none';
+                slide2.style.display = 'block';
+                currentSlide = 2;
+                prevSlide.style.display = 'inline'; // Show Previous button
+                nextSlide.style.display = 'none'; // Hide Next button
+            }
+        };
 
-        prevSlide.addEventListener('click', () => {
-            slide1.style.display = 'block';
-            slide2.style.display = 'none';
-            nextSlide.style.display = 'inline'; // Show Next Slide button
-            prevSlide.style.display = 'none'; // Hide Previous Slide button
-        });
-
-        // Form JavaScript and other functionalities here
+        prevSlide.onclick = function() {
+            if (currentSlide === 2) {
+                slide2.style.display = 'none';
+                slide1.style.display = 'block';
+                currentSlide = 1;
+                prevSlide.style.display = 'none'; // Hide Previous button
+                nextSlide.style.display = 'inline'; // Show Next button
+            }
+        };
     </script>
 </body>
 </html>
+
