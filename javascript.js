@@ -8,10 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const deadlineInput = document.getElementById('deadline');
     const noResultsMessage = document.getElementById('noResults');
     const resetButton = document.getElementById('resetButton');
-    const helpButton = document.getElementById('helpButton');
-    const closePopupButton = document.getElementById('closePopup');
-    const helpPopup = document.getElementById('helpPopup');
-    const helpMessage = document.getElementById('helpMessage');
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
@@ -45,13 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirm('Are you sure you want to delete this task?')) {
                 tasks.splice(index, 1); // Remove the task from the list
                 displayTasks(); // Re-display the tasks
-                showMessage('Task deleted successfully!'); // Confirmation message
+                showMessage('Task deleted successfully!');
             }
         });
 
         // Add edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            editTask(index); // Directly call editTask without confirmation
+            editTask(index);
         });
 
         // Apply priority color to the priority cell
@@ -73,30 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-  // Function to display a popup message
-    function showMessage(message) {
-        const popup = document.createElement('div');
-        popup.className = 'popup';
-        popup.innerHTML = `
-            <p>${message}</p>
-            <button class="close-btn">Close</button>
-        `;
-        document.body.appendChild(popup);
-
-        // Close button functionality
-        popup.querySelector('.close-btn').addEventListener('click', () => {
-            document.body.removeChild(popup);
-        });
-
-        // Automatically remove popup after 3 seconds
-        setTimeout(() => {
-            if (document.body.contains(popup)) {
-                document.body.removeChild(popup);
-            }
-        }, 3000);
-    }
-
-
     // Add or update a task
     taskForm.addEventListener('submit', function(event) {
         event.preventDefault();
@@ -111,22 +83,17 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         if (editIndex === null) {
-            // Prompt for confirmation when adding a new task
-            if (confirm('Are you sure you want to add this task?')) {
-                tasks.push(newTask);
-                showMessage('Task added successfully!'); // Confirmation message
-                taskForm.reset(); // Clear the form
-            }
+            // Add new task
+            tasks.push(newTask);
+            showMessage('Task added successfully!');
         } else {
-            // Prompt for confirmation before updating the existing task
-            if (confirm('Are you sure you want to update this task?')) {
-                tasks[editIndex] = newTask; // Update the existing task
-                showMessage('Task updated successfully!'); // Confirmation message
-                editIndex = null; // Reset editIndex after updating
-                taskForm.reset(); // Clear the form
-            }
+            // Update the existing task
+            tasks[editIndex] = newTask;
+            showMessage('Task updated successfully!');
+            editIndex = null;
         }
 
+        taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
         displayTasks(); // Refresh the task table
     });
@@ -163,11 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const filteredTasks = tasks.filter(task => 
             (task.title.toLowerCase().includes(searchQuery) || 
-            task.description.toLowerCase().includes(searchQuery) ||
-            task.team.toLowerCase().includes(searchQuery) ||
-            task.priority.toLowerCase().includes(searchQuery) ||
-            task.deadline.toLowerCase().includes(searchQuery) ||
-            task.assignee.toLowerCase().includes(searchQuery)) &&
+            task.description.toLowerCase().includes(searchQuery)) &&
             (filterValue === '' || task.priority === filterValue)
         );
 
@@ -186,19 +149,41 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', filterTasks);
     filterSelect.addEventListener('change', filterTasks);
 
+    // Function to display a popup message
+    function showMessage(message) {
+        const popup = document.createElement('div');
+        popup.className = 'popup';
+        popup.innerHTML = `
+            <p>${message}</p>
+            <button class="close-btn">Close</button>
+        `;
+        document.body.appendChild(popup);
+
+        // Close button functionality
+        popup.querySelector('.close-btn').addEventListener('click', () => {
+            document.body.removeChild(popup);
+        });
+
+        // Automatically remove popup after 3 seconds
+        setTimeout(() => {
+            if (document.body.contains(popup)) {
+                document.body.removeChild(popup);
+            }
+        }, 3000);
+    }
+
     // Help and Documentation Popup Logic
-    helpButton.addEventListener('click', function() {
-        helpPopup.style.display = 'block';
-        helpMessage.textContent = "Hey!"; // Show "Hello" message
+    document.getElementById('helpButton').addEventListener('click', function() {
+        document.getElementById('helpPopup').style.display = 'block';
+        document.getElementById('helpMessage').textContent = "Hey!"; // Show "Hello" message
     });
 
-   // Close help popup
+    // Close help popup
     document.getElementById('closePopup').addEventListener('click', function() {
         document.getElementById('helpPopup').style.display = 'none';
     });
 
-
-    // Reset button functionality
+    // Add this inside the DOMContentLoaded event listener
     resetButton.addEventListener('click', function() {
         taskForm.reset(); // Reset the form fields to their initial values
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text to 'Add Task'
