@@ -39,8 +39,6 @@
             opacity: 0; /* Fade out effect */
         }
 
-        /* Other existing styles... */
-
         /* Button Styles */
         #nextSlide {
             background-color: green; /* Green for Next Slide */
@@ -75,7 +73,7 @@
         <button id="helpButton">User Documentation</button>
 
         <!-- Help Popup -->
-        <div id="helpPopup" class="popup">
+        <div id="helpPopup" class="popup" style="display: none;">
             <div class="popup-content">
                 <div id="slide1">
                     <h2>Welcome to Task Engine!</h2>
@@ -229,6 +227,9 @@
 
         helpButton.onclick = function() {
             helpPopup.style.display = 'block';
+            slide1.style.display = 'block';
+            slide2.style.display = 'none';
+            prevSlide.style.display = 'none'; // Hide Previous button on first slide
         };
 
         closePopup.onclick = function() {
@@ -239,9 +240,8 @@
             if (currentSlide === 1) {
                 slide1.style.display = 'none';
                 slide2.style.display = 'block';
-                currentSlide = 2;
                 prevSlide.style.display = 'inline'; // Show Previous button
-                nextSlide.style.display = 'none'; // Hide Next button
+                currentSlide++;
             }
         };
 
@@ -249,33 +249,84 @@
             if (currentSlide === 2) {
                 slide2.style.display = 'none';
                 slide1.style.display = 'block';
-                currentSlide = 1;
                 prevSlide.style.display = 'none'; // Hide Previous button
-                nextSlide.style.display = 'inline'; // Show Next button
+                currentSlide--;
             }
         };
 
-        // Function to show messages in the popupContainer
-        function showMessage(message) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'popup'; // Add popup class
-            messageDiv.innerText = message;
+        // Task Management JavaScript (Existing code)
+        const taskForm = document.getElementById('taskForm');
+        const taskTableBody = document.getElementById('taskTable').getElementsByTagName('tbody')[0];
+        const noResults = document.getElementById('noResults');
+        const wordCount = document.getElementById('wordCount');
 
-            const popupContainer = document.getElementById('popupContainer');
-            popupContainer.appendChild(messageDiv);
-            popupContainer.style.display = 'flex'; // Show the container
+        taskForm.onsubmit = function(event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const team = document.getElementById('team').value;
+            const priority = document.getElementById('priority').value;
+            const deadline = document.getElementById('deadline').value;
+            const assignee = document.getElementById('assignee').value;
 
-            // Fade out effect after 3 seconds
-            setTimeout(() => {
-                messageDiv.classList.add('fade-out');
-                setTimeout(() => {
-                    popupContainer.removeChild(messageDiv);
-                    if (popupContainer.childElementCount === 0) {
-                        popupContainer.style.display = 'none'; // Hide container if empty
-                    }
-                }, 500);
-            }, 3000); // Adjust the time as needed
+            // Ask for confirmation before adding the task
+            if (confirm('Are you sure you want to add this task?')) {
+                const newRow = taskTableBody.insertRow();
+                newRow.innerHTML = `<td>${title}</td><td>${team}</td><td>${description}</td><td>${priority}</td><td>${deadline}</td><td>${assignee}</td><td>Pending</td><td><button class="edit">Edit</button> <button class="delete">Delete</button></td>`;
+                clearForm();
+            }
+        };
+
+        function clearForm() {
+            taskForm.reset();
+            wordCount.textContent = '0/30 words';
         }
+
+        // Word count for description
+        const descriptionInput = document.getElementById('description');
+        descriptionInput.oninput = function() {
+            const wordCountValue = this.value.split(/\s+/).filter(function(word) {
+                return word.length > 0;
+            }).length;
+            wordCount.textContent = `${wordCountValue}/30 words`;
+        };
+
+        // Search Functionality
+        const searchInput = document.getElementById('search');
+        searchInput.oninput = function() {
+            const searchText = this.value.toLowerCase();
+            const rows = taskTableBody.getElementsByTagName('tr');
+            let found = false;
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let rowContainsText = false;
+
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(searchText)) {
+                        rowContainsText = true;
+                        break;
+                    }
+                }
+
+                if (rowContainsText) {
+                    rows[i].style.display = '';
+                    found = true;
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+
+            // Show no results message if no rows found
+            noResults.style.display = found ? 'none' : 'block';
+        };
+
+        // Reset Button
+        const resetButton = document.getElementById('resetButton');
+        resetButton.onclick = function() {
+            clearForm();
+            noResults.style.display = 'none';
+        };
     </script>
 </body>
 </html>
