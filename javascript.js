@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Add edit functionality
         row.querySelector('.edit-btn').addEventListener('click', () => {
-            editTask(index);
+            const confirmUpdate = confirm('Do you want to make these changes to your entry?');
+            if (confirmUpdate) {
+                editTask(index);
+            }
         });
 
         // Apply priority color to the priority cell
@@ -84,18 +87,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (editIndex === null) {
             // Add new task
-            tasks.push(newTask);
-            showMessage('Task added successfully!');
+            const confirmAdd = confirm('Are you sure you want to add this task?');
+            if (confirmAdd) {
+                tasks.push(newTask);
+                showMessage('Task added successfully!');
+                taskForm.reset(); // Clear the form
+                displayTasks(); // Refresh the task table
+            }
         } else {
             // Update the existing task
-            tasks[editIndex] = newTask;
-            showMessage('Task updated successfully!');
-            editIndex = null;
+            const confirmUpdate = confirm('Do you want to make these changes to your entry?');
+            if (confirmUpdate) {
+                tasks[editIndex] = newTask;
+                showMessage('Task updated successfully!');
+                editIndex = null;
+                taskForm.reset(); // Clear the form
+                displayTasks(); // Refresh the task table
+            }
         }
 
-        taskForm.reset(); // Clear the form
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
-        displayTasks(); // Refresh the task table
     });
 
     // Function to fill the form with task data for editing
