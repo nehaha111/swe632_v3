@@ -12,10 +12,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const closePopupButton = document.getElementById('closePopup');
     const helpPopup = document.getElementById('helpPopup');
     const helpMessage = document.getElementById('helpMessage');
+    const notification = document.getElementById('notification');
 
     let tasks = [];
     let editIndex = null; // Track the index of the task being edited
 
+    //function for notification
+    function showMessage(message) {
+        notification.textContent = message; // Set message text
+        notification.style.opacity = '1'; // Show notification
+
+        // Automatically hide notification after 3 seconds
+        setTimeout(() => {
+            notification.style.opacity = '0'; // Fade out notification
+        }, 3000);
+    }
     // Function to add a row to the task table
     function addTaskRow(task, index) {
         const row = taskTable.insertRow();
@@ -73,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Function to display a popup message
+  // Function to display a popup message
     function showMessage(message) {
         const popup = document.createElement('div');
         popup.className = 'popup';
@@ -96,35 +107,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
+
     // Add or update a task
-    taskForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+   // Add or update a task
+taskForm.addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        const newTask = {
-            title: document.getElementById('title').value,
-            team: document.getElementById('team').value,
-            description: document.getElementById('description').value,
-            priority: document.getElementById('priority').value,
-            deadline: document.getElementById('deadline').value,
-            assignee: document.getElementById('assignee').value
-        };
+    const newTask = {
+        title: document.getElementById('title').value,
+        team: document.getElementById('team').value,
+        description: document.getElementById('description').value,
+        priority: document.getElementById('priority').value,
+        deadline: document.getElementById('deadline').value,
+        assignee: document.getElementById('assignee').value
+    };
 
-        if (editIndex === null) {
-            // Prompt for confirmation when adding a new task
-            if (confirm('Are you sure you want to add this task?')) {
-                tasks.push(newTask);
-                showMessage('Task added successfully!'); // Confirmation message
-                taskForm.reset(); // Clear the form
-            }
-        } else {
-            // Prompt for confirmation before updating the existing task
-            if (confirm('Are you sure you want to update this task?')) {
-                tasks[editIndex] = newTask; // Update the existing task
-                showMessage('Task updated successfully!'); // Confirmation message
-                editIndex = null; // Reset editIndex after updating
-                taskForm.reset(); // Clear the form
-            }
+    if (editIndex === null) {
+        // Prompt for confirmation when adding a new task
+        if (confirm('Are you sure you want to add this task?')) {
+            tasks.push(newTask);
+            showMessage('Task added successfully!'); // Confirmation message
+            taskForm.reset(); // Clear the form
         }
+    } else {
+        // Prompt for confirmation before updating the existing task
+        if (confirm('Are you sure you want to update this task?')) {
+            tasks[editIndex] = newTask; // Update the existing task
+            showMessage('Task updated successfully!'); // Confirmation message
+            editIndex = null; // Reset editIndex after updating
+            taskForm.reset(); // Clear the form
+        }
+    }
+
+    displayTasks(); // Refresh the task table
+});
+
 
         document.querySelector('button[type="submit"]').textContent = 'Add Task'; // Reset button text
         displayTasks(); // Refresh the task table
@@ -148,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
     descriptionInput.addEventListener('input', function() {
         const wordCount = descriptionInput.value.split(/\s+/).filter(word => word.length > 0).length;
         wordCountDisplay.textContent = `${wordCount}/30 words`;
-        wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888'; // Ensure color updates when over limit
+        wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888';
     });
 
     // Set date input to only show future dates
@@ -174,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (filteredTasks.length > 0) {
             filteredTasks.forEach((task, index) => {
-                addTaskRow(task, tasks.indexOf(task)); // Use the original task index
+                addTaskRow(task, tasks.indexOf(task));
             });
             noResultsMessage.style.display = 'none';
         } else {
@@ -188,13 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Help and Documentation Popup Logic
     helpButton.addEventListener('click', function() {
         helpPopup.style.display = 'block';
-        helpMessage.textContent = "This is the help message."; // Update help message
+        helpMessage.textContent = "Hey!"; // Show "Hello" message
     });
 
-    // Close help popup
-    closePopupButton.addEventListener('click', function() {
-        helpPopup.style.display = 'none';
+   // Close help popup
+    document.getElementById('closePopup').addEventListener('click', function() {
+        document.getElementById('helpPopup').style.display = 'none';
     });
+
 
     // Reset button functionality
     resetButton.addEventListener('click', function() {
@@ -203,4 +221,3 @@ document.addEventListener('DOMContentLoaded', function() {
         editIndex = null; // Clear the edit index
         noResultsMessage.style.display = 'none'; // Hide no results message
     });
-});
