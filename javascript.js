@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-  // Function to display a popup message
+    // Function to display a popup message
     function showMessage(message) {
         const popup = document.createElement('div');
         popup.className = 'popup';
@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 3000);
     }
-
 
     // Add or update a task
     taskForm.addEventListener('submit', function(event) {
@@ -149,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     descriptionInput.addEventListener('input', function() {
         const wordCount = descriptionInput.value.split(/\s+/).filter(word => word.length > 0).length;
         wordCountDisplay.textContent = `${wordCount}/30 words`;
-        wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888';
+        wordCountDisplay.style.color = wordCount > 30 ? 'red' : '#888'; // Ensure color updates when over limit
     });
 
     // Set date input to only show future dates
@@ -175,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (filteredTasks.length > 0) {
             filteredTasks.forEach((task, index) => {
-                addTaskRow(task, tasks.indexOf(task));
+                addTaskRow(task, tasks.indexOf(task)); // Use the original task index
             });
             noResultsMessage.style.display = 'none';
         } else {
@@ -189,14 +188,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Help and Documentation Popup Logic
     helpButton.addEventListener('click', function() {
         helpPopup.style.display = 'block';
-        helpMessage.textContent = "Hey!"; // Show "Hello" message
+        helpMessage.textContent = "This is the help message."; // Update help message
     });
 
-   // Close help popup
-    document.getElementById('closePopup').addEventListener('click', function() {
-        document.getElementById('helpPopup').style.display = 'none';
+    // Close help popup
+    closePopupButton.addEventListener('click', function() {
+        helpPopup.style.display = 'none';
     });
-
 
     // Reset button functionality
     resetButton.addEventListener('click', function() {
@@ -206,5 +204,3 @@ document.addEventListener('DOMContentLoaded', function() {
         noResultsMessage.style.display = 'none'; // Hide no results message
     });
 });
-
-          
